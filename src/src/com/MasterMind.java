@@ -143,7 +143,7 @@ public class MasterMind {
             //endGuesses(definitelyDoUse, slot1, slot2, slot3, slot4, notSlot1, notSlot2, notSlot3, notSlot4, code);
         }
     }
-    
+
     private static void createGuess(int[] definitelyDontUse, int[] definitelyDoUse, byte slot1, byte slot2, byte slot3, byte slot4, byte[] notSlot1, byte[] notSlot2, byte[] notSlot3, byte[] notSlot4, int[] code) {
         String guess;
         boolean canUse = true;
