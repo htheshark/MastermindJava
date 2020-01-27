@@ -5,12 +5,14 @@ public class MasterMind {
     static int[] userNum2 = new int[9]; //wrong place, right number
     public static void main(String[] args) {
         //beginning:
-        int[] possibleNumber = new int[5]; //0 = need to check, 1 = don't use, 2 = do use
+        int[] possibleNumber = new int[6]; //0 = need to check, 1 = don't use, 2 = do use
         int slot1 = 0, slot2 = 0, slot3 = 0, slot4 = 0;
         int[] notSlot1 = new int[9];
         int[] notSlot2 = new int[10];
         int[] notSlot3 = new int[9];
         int[] notSlot4 = new int[9];
+        int[] thisIsAnAccumulator = new int[1];
+        int[] multiplicity = new int[5];
         int[] code = new int[4]; //change to code1[guessnum], code2[], etc.
         int guessNum = 1;
         boolean[] itWasThisSlot = new boolean[3];
@@ -70,16 +72,28 @@ public class MasterMind {
                             if (userNum1[guessNum - 1] + userNum2[guessNum - 1] == 0) {
                                 possibleNumber[checkForUse] = 1; //checked number is dont use now
                                 dontUse++;
+                                if (userNum2[0] + userNum1[0] + thisIsAnAccumulator[0] == 3){
+
+                                }
                                 break;
                             }else{
                                 possibleNumber[checkForUse] = 2; //checked number is do use now
                                 doUse++;
+                                multiplicity[possibleNumber[checkForUse]] = userNum1[guessNum];
+                                thisIsAnAccumulator[0]++;
+                                if (userNum1[0] + userNum2[0] == thisIsAnAccumulator[0]) {
+                                    for (int newCounter = 0; newCounter <= 3; newCounter++){
+                                        if (possibleNumber[newCounter] == 0) {
+                                            possibleNumber[newCounter] = 1; //this be don't use
+                                        }
+                                    }
+                                }
                             }
                         }
-                    } else {
+                    } else { //if second guess was more accurate than first guess
                         while (dontUse == 0) {
                             int counter = 0;
-                            int checkForUse = 1 + counter;
+                            int checkForUse = 6 - counter;
                             guessNum++;
                             guess = checkForUse + " " + checkForUse + " " + checkForUse + " " + checkForUse;
                             getUserInput(scnr, guess, guessNum);
@@ -90,6 +104,14 @@ public class MasterMind {
                             }else{
                                 possibleNumber[checkForUse] = 2; //checked number is do use now
                                 doUse++;
+                                thisIsAnAccumulator[1]++;
+                                if (userNum1[1] + userNum2[1] == thisIsAnAccumulator[1]) {
+                                    for (int newCounter = 2; newCounter <= 5; newCounter++){
+                                        if (possibleNumber[newCounter] == 0) {
+                                            possibleNumber[newCounter] = 1; //this be don't use
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -101,7 +123,7 @@ public class MasterMind {
                         notThis++;
                     }
                 }
-            } else if (doUse != 0) {
+            } else if (doUse >=4) {
                 while ((userNum1[guessNum - 1] != 4) && (userNum2[guessNum - 1] != 4)) {
                     guessNum++;
                     createGuess(possibleNumber, slot1, slot2, slot3, slot4, notSlot1, notSlot2, notSlot3, notSlot4, code);
@@ -163,10 +185,6 @@ public class MasterMind {
         //endGuesses(definitelyDoUse, slot1, slot2, slot3, slot4, notSlot1, notSlot2, notSlot3, notSlot4, code);
     }
 
-    public static void guessWithNoDo(int[] definitelyDontUse, int slot1, int slot2, int slot3, int slot4, int[] notSlot1, int[] notSlot2, int[] notSlot3, int[] notSlot4, int[] code){
-        String guess;
-
-    }
 
     public static void createGuess(int[] possibleNumber, int slot1, int slot2, int slot3, int slot4, int[] notSlot1, int[] notSlot2, int[] notSlot3, int[] notSlot4, int[] code) {
         String guess;
@@ -179,32 +197,17 @@ public class MasterMind {
             switch (slot1){
                 case 0:
                     for (int y = 0; y <= 5; y++){
-                        if (possibleNumber[y] == 2)  {
-                            for (int z = 0; z <= 9; z++) {
-                                if (notSlot1[z] == y) {
-                                    canUse = false;
-                                    break;
-                                }
-                            }
+                        if (possibleNumber[y] == 2)  { //if it's definitely do use
+
                         }
                         if (canUse){
                             code[0] = y;
                             break;
-                        }else {
-                            canUse = true;
                         }
                     }
                     break;
-                case 1: code[0] = 1;
-                    break;
-                    case 2:
-                    code[0] = 2;
-                    break;
-                case 3:
-                    code[0] = 3;
-                    break;
-                case 4:
-                    code[0] = 4;
+                default:
+                    code[0] = slot1;
                     break;
             }
             x++;
@@ -231,17 +234,8 @@ public class MasterMind {
                             }
                         }
                         break;
-                    case 1:
-                        code[1] = 1;
-                        break;
-                    case 2:
-                        code[1] = 2;
-                        break;
-                    case 3:
-                        code[1] = 3;
-                        break;
-                    case 4:
-                        code[1] = 4;
+                    default:
+                        code[1] = slot2;
                         break;
                 }
                 x++;
@@ -268,17 +262,8 @@ public class MasterMind {
                                 }
                             }
                             break;
-                        case 1:
-                            code[2] = 1;
-                            break;
-                        case 2:
-                            code[2] = 2;
-                            break;
-                        case 3:
-                            code[2] = 3;
-                            break;
-                        case 4:
-                            code[2] = 4;
+                        default:
+                            code[2] = slot3;
                             break;
                     }
                     x++;
@@ -305,17 +290,8 @@ public class MasterMind {
                                     }
                                 }
                                 break;
-                            case 1:
-                                code[3] = 1;
-                                break;
-                            case 2:
-                                code[3] = 2;
-                                break;
-                            case 3:
-                                code[3] = 3;
-                                break;
-                            case 4:
-                                code[3] = 4;
+                            default:
+                                code[3] = slot4;
                                 break;
                         }
                         x++;
@@ -350,25 +326,148 @@ public class MasterMind {
 
     public String guessFromDont(int[] possibleNumber, int slot1, int slot2, int slot3, int slot4, int[] notSlot1, int[] notSlot2, int[] notSlot3, int[] notSlot4, int[] code) {
         String guess;
-        boolean canUse = true;
+        boolean[] canUse = {true, true, true, true, true, true};
         int x = 0;
-        switch (slot1) {
-            case 0:
-
-                break;
-            case 1:
-                code[0] = 1;
-                break;
-            case 2:
-                code[0] = 2;
-                break;
-            case 3:
-                code[0] = 3;
-                break;
-            case 4:
-                code[0] = 4;
-                break;
+        //Word from sayre: nested ifs are best bet
+        if ((slot1 > 0) && (slot1 <= 6)) {
+            code[0] = slot1;
+            if ((slot2 > 0) && (slot2 <= 6)) {
+                code[1] = slot2;
+                if ((slot3 > 0) && (slot3 <= 6)) {
+                    code[2] = slot3;
+                    if ((slot4 > 0) && (slot4 <= 6)) {
+                        code[3] = slot4;
+                    }else {
+                        for (int counter = 0; counter <= 5; counter++) {
+                            switch (possibleNumber[counter]) {
+                                case 0:
+                                case 2:
+                                    for (int z = 0; z <= 9; z++) {
+                                        if (notSlot4[z] == counter) {
+                                            canUse[counter] = false;
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    canUse[counter] = false;
+                                    break;
+                                default:
+                                    System.out.println("big error buddy");
+                                    break;
+                            }
+                        }
+                        for (int newCounter = 0; newCounter <=5; newCounter++){
+                            if (canUse[newCounter] == true){
+                                code[3] = newCounter;
+                                break;
+                            }
+                        }
+                    }
+                }
+                }else {
+                    for (int counter = 0; counter <= 5; counter++) {
+                        switch (possibleNumber[counter]) {
+                            case 0:
+                            case 2:
+                                for (int z = 0; z <= 9; z++) {
+                                    if (notSlot3[z] == counter) {
+                                        canUse[counter] = false;
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 1:
+                                canUse[counter] = false;
+                                break;
+                            default:
+                                System.out.println("big error buddy");
+                                break;
+                        }
+                    }
+                    for (int newCounter = 0; newCounter <=5; newCounter++){
+                        if (canUse[newCounter] == true){
+                            code[2] = newCounter;
+                            break;
+                        }
+                    }
+                    for (int newCounter = 0; newCounter <= 5; newCounter++){
+                        if (possibleNumber[newCounter] == 1) {
+                            code[3] = possibleNumber[newCounter];
+                        }
+                    }
+                }
+            }else {
+                for (int counter = 0; counter <= 5; counter++) {
+                    switch (possibleNumber[counter]) {
+                        case 0:
+                        case 2:
+                            for (int z = 0; z <= 9; z++) {
+                                if (notSlot2[z] == counter) {
+                                    canUse[counter] = false;
+                                    break;
+                                }
+                            }
+                            break;
+                        case 1:
+                            canUse[counter] = false;
+                            break;
+                        default:
+                            System.out.println("big error buddy");
+                            break;
+                    }
+                }
+                for (int newCounter = 0; newCounter <=5; newCounter++){
+                    if (canUse[newCounter] == true){
+                        code[1] = newCounter;
+                        break;
+                    }
+                }
+                for (int newCounter = 0; newCounter <= 5; newCounter++){
+                    if (possibleNumber[newCounter] == 1) {
+                        code[2] = possibleNumber[newCounter];
+                        code[3] = possibleNumber[newCounter];
+                    }
+                }
+            }
+        }else {
+            for (int counter = 0; counter <= 5; counter++) {
+                switch (possibleNumber[counter]) {
+                    case 0:
+                    case 2:
+                        for (int z = 0; z <= 9; z++) {
+                            if (notSlot1[z] == counter) {
+                                canUse[counter] = false;
+                                break;
+                            }
+                        }
+                        break;
+                    case 1:
+                        canUse[counter] = false;
+                        break;
+                    default:
+                        System.out.println("big error buddy");
+                        break;
+                }
+            }
+            for (int newCounter = 0; newCounter <=5; newCounter++){
+                if (canUse[newCounter] == true){
+                    code[0] = newCounter;
+                    break;
+                }
+            }
+            for (int newCounter = 0; newCounter <= 5; newCounter++){
+                if (possibleNumber[newCounter] == 1) {
+                    code[1] = possibleNumber[newCounter];
+                    code[2] = possibleNumber[newCounter];
+                    code[3] = possibleNumber[newCounter];
+                }
+            }
         }
+        code[1] = slot2;
+        code[2] = slot3;
+        code[3] = slot4;
+
         guess = code[0] + " " + code[1] + " " + code[2] + " " + code[3];
         return guess;
     }
